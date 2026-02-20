@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Voice to Data: Structuring 32 Lakh B2B Calls</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 { font-size: 2.2em; margin-bottom: 0.5em; }
+        h2 { font-size: 1.6em; margin-top: 1.5em; }
+        h3 { font-size: 1.3em; }
+        img { max-width: 100%; height: auto; margin: 1em 0; }
+        pre { background: #f4f4f4; padding: 1em; overflow-x: auto; }
+        code { background: #f4f4f4; padding: 0.2em 0.4em; }
+        blockquote { border-left: 4px solid #ddd; margin-left: 0; padding-left: 1em; color: #666; }
+        table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f4f4f4; }
+        hr { border: none; border-top: 1px solid #ddd; margin: 2em 0; }
+    </style>
+</head>
+<body>
+<h1 id="fromvoicetodatastructuring32lakhb2bcalls">From Voice to Data: Structuring 32 Lakh B2B Calls</h1>
+<p><em>How we stopped extracting the same data three times and built a single source of truth for business intelligence</em></p>
+<hr />
+<h2 id="introduction">Introduction 📞</h2>
+<p>Every month, IndiaMART processes 32 lakh phone calls between buyers and sellers. These aren't just casual conversations - they're packed with critical B2B intelligence. A buyer in Bilaspur asking about roti making machines. A seller quoting ₹1.1 lakh for an automatic model. Specifications discussed. Quantities negotiated. Stock availability confirmed.</p>
+<p>This information is gold for multiple teams. Product teams want to understand buyer intent. Analytics teams need pricing data. Sales teams require call summaries. But here's the problem: <strong>each team was independently running AI models on the same calls to extract what they needed.</strong></p>
+<p>The same call recording was being processed three times. Three separate model calls. Three different prompts. Three versions of the "truth" - each slightly different in format and accuracy. And three separate bills.</p>
+<p>It wasn't just wasteful. It was creating data inconsistencies, duplicate approvals, and maintenance headaches across teams. We needed a better way. This is the story of how we built a centralized system that extracts all necessary data from a call in one pass, stores it in a unified database, and serves multiple use cases - while cutting costs by 30%.</p>
+<hr />
+<h2 id="theproblemeveryoneextractingeverything">The Problem: Everyone Extracting Everything 🔄</h2>
+<p>Picture this: Team A extracts product specifications from a call. Team B extracts pricing information from the same call. Team C extracts buyer requirements - again, from the same call.</p>
+<p>Each team had legitimate needs:</p>
+<ul>
+<li><strong>Lead Manager team</strong> wanted call summaries for sellers</li>
+<li><strong>Pricing analytics team</strong> needed negotiated prices and quantities</li>
+<li><strong>ISQ enrichment team</strong> required buyer specifications</li>
+<li><strong>Product teams</strong> wanted to understand market trends</li>
+</ul>
+<p>So each team built their own pipeline. Each wrote their own prompts. Each made their own model calls. Each stored data in their own format.</p>
+<p>The result? <strong>Fragmented data extraction at scale.</strong></p>
+<h3 id="whatthiscreated">What This Created</h3>
+<p><strong>Cost duplication</strong>: The same audio file triggered multiple expensive LLM calls - one per team</p>
+<p><strong>Inconsistent accuracy</strong>: Different prompts meant different extraction quality. One team's "quantity" field might capture buyer requirements, another might capture MOQ, and a third might capture seller capacity</p>
+<p><strong>Schema chaos</strong>: No standard definition of fields. Is "price" with GST or without? Is "quantity" what the buyer wants or what the seller can supply?</p>
+<p><strong>Maintenance burden</strong>: Each team needed separate approvals, separate optimization efforts, and separate debugging</p>
+<p>When you're processing millions of calls, these inefficiencies compound fast.</p>
+<hr />
+<h2 id="buildingasinglesourceoftruth">Building a Single Source of Truth 🎯</h2>
+<p>The solution was conceptually simple: <strong>extract all required data in one model call and store it in a centralized database that everyone can use.</strong></p>
+<p>But simple doesn't mean easy. We needed to:</p>
+<ol>
+<li>Understand what every team actually needed</li>
+<li>Design a schema that could serve multiple use cases</li>
+<li>Build a prompt that accurately extracts 60+ fields</li>
+<li>Create infrastructure that could handle the scale</li>
+<li>Ensure the accuracy matched or exceeded existing pipelines</li>
+</ol>
+<h3 id="step1requirementconsolidation">Step 1: Requirement Consolidation</h3>
+<p>We gathered input from every team using PNS (Phone Network Service) call data. What fields do you need? How do you define them? What's the acceptable accuracy?</p>
+<p>Then came the hard work of <strong>deduplication and standardization</strong>. Multiple teams wanted "price" - but they meant different things. We needed unified definitions that worked for everyone.</p>
+<p>The result: <strong>60+ standardized fields</strong> grouped into logical categories:</p>
+<ul>
+<li>Product and category details</li>
+<li>Specifications (machine type, material, capacity)</li>
+<li>Price details (value, currency, GST inclusion)</li>
+<li>Buyer requirements</li>
+<li>Seller information</li>
+<li>Quantities and MOQs</li>
+</ul>
+<h3 id="step2schemadesign">Step 2: Schema Design</h3>
+<p>With 32 lakh calls per month and 60+ fields per call, database design mattered. We needed a structure that could:</p>
+<ul>
+<li>Support current use cases and future requirements</li>
+<li>Allow efficient querying for analytics</li>
+<li>Maintain relationships between related data</li>
+<li>Scale without performance degradation</li>
+</ul>
+<p>The schema groups related fields into logical tables with clear relationships, making it easy for downstream teams to query what they need.</p>
+<h3 id="step3theextractionmodel">Step 3: The Extraction Model</h3>
+<p><strong>Model choice</strong>: Gemini 2.5 Flash</p>
+<p><strong>Key decision</strong>: We use <strong>structured output extraction</strong> directly from audio - no transcript generation step. The model listens to the call and outputs data in a fixed JSON format.</p>
+<p>Why this matters: Structured output dramatically reduces hallucinations. Instead of asking the model to generate free-form text that we then parse, we define the exact schema we want. The model fills in the fields or marks them as null if information isn't present.</p>
+<h3 id="step4promptengineeringforaccuracy">Step 4: Prompt Engineering for Accuracy</h3>
+<p>Getting one field right is easy. Getting 60+ fields consistently accurate across diverse B2B conversations is hard.</p>
+<p>We went through multiple audit cycles, refining the prompt to handle edge cases:</p>
+<p><strong>MOQ vs. buyer quantity</strong>: Is the number mentioned what the buyer wants or the minimum order quantity?</p>
+<p><strong>Capacity vs. quantity</strong>: When a seller says "I can supply 1000 units," is that total capacity or the quantity for this order?</p>
+<p><strong>Category identification</strong>: Mapping natural language product descriptions to standardized categories</p>
+<p><strong>Current accuracy</strong>: ~94% for product, specification, quantity, and price extraction. User details (names, locations, contact info) are at 80% - still being improved.</p>
+<p>Teams using the data confirmed this <strong>matches or exceeds the accuracy of their previous independent pipelines.</strong></p>
+<p><img src="https://lh3.googleusercontent.com/d/1mWX26lG1t7AMEJYYOCAnqBpvNOIhiMB9" alt="Architecture diagram showing centralized PNS data extraction pipeline" />
+<em>Centralized architecture: one extraction pipeline serving multiple downstream use cases</em></p>
+<hr />
+<h2 id="whatthedatalookslike">What the Data Looks Like 📊</h2>
+<p>Here's a real example of extracted data (sanitized):</p>
+<p>| Category | Attribute | Value |
+|----------|-----------|-------|
+| <strong>Buyer Details</strong> | Buyer City | Bilaspur |
+| | Buyer State | Chhattisgarh |
+| | Buyer Mobile | 9054540348 |
+| <strong>Product 1</strong> | Product Name | Roti Making Machine |
+| | In Stock | Yes |
+| <strong>Price</strong> | Currency | INR |
+| | Price Value | 110000 |
+| | GST Included | No |
+| <strong>Specifications</strong> | Machine Type | Automatic |
+| | Installation Type | Tabletop |
+| <strong>Product 2</strong> | Product Name | Roti Pressing Machine (RC205 mini) |
+| | In Stock | Yes |
+| <strong>Price</strong> | Currency | INR |
+| | Price Value | 40000 |
+| | GST Included | No |
+| <strong>Specifications</strong> | Machine Type | Pressing |
+| | Installation Type | Tabletop |
+| | Body Material | SS 202 |
+| | Motor Brand | FHP |
+| | Warranty | 1 year |
+| | Temperature Control | Dual |</p>
+<p>Notice the structure. Each piece of information has a clear category, attribute, and value. This isn't unstructured text - it's <strong>analysis-ready data.</strong></p>
+<hr />
+<h2 id="theimpactonecalloneextraction">The Impact: One Call, One Extraction 💡</h2>
+<h3 id="costefficiency">Cost Efficiency</h3>
+<p><strong>Before</strong>: Multiple teams × multiple model calls per recording = duplicated costs</p>
+<p><strong>After</strong>: One model call per recording, shared across all teams</p>
+<p><strong>Result</strong>: <strong>30% cost reduction</strong> compared to teams working independently. And as we scale to 100% of calls, the savings multiply.</p>
+<h3 id="dataconsistency">Data Consistency</h3>
+<p>Everyone now works from the same extracted data. When the pricing team sees "₹110,000," the analytics team sees the same number. No more discrepancies between team reports.</p>
+<h3 id="scalabilitywithoutoverhead">Scalability Without Overhead</h3>
+<p>Adding new requirements doesn't mean spinning up a new project. Teams can request additional fields, and we extend the schema. The infrastructure already exists.</p>
+<p><strong>Current capacity</strong>: Processing calls for 6% of users. Architecture can support 10% without modifications. We're optimizing to reach 100% based on feedback from architecture review committee.</p>
+<h3 id="analysisreadyformat">Analysis-Ready Format</h3>
+<p>The structured storage enables powerful analytics:</p>
+<ul>
+<li>Average price per product category</li>
+<li>Average price per category per city</li>
+<li>Out-of-stock product identification</li>
+<li>Location-specific demand patterns</li>
+<li>Buyer behavior trends</li>
+</ul>
+<p>Previously, the lack of standardized format made this kind of analysis nearly impossible at scale.</p>
+<hr />
+<h2 id="keytakeaways">Key Takeaways 🎯</h2>
+<p>✅ <strong>One source of truth beats multiple versions</strong> - Centralizing data extraction eliminated inconsistencies and reduced costs by 30%</p>
+<p>✅ <strong>Structured output reduces hallucinations</strong> - Defining exact schema for extraction dramatically improves accuracy over free-form text generation</p>
+<p>✅ <strong>Schema design matters at scale</strong> - With 60+ fields and 32 lakh calls monthly, proper database architecture enables efficient analysis</p>
+<p>✅ <strong>Accuracy through iteration</strong> - Achieving 94% extraction accuracy required multiple audit cycles and careful prompt engineering for edge cases</p>
+<p>✅ <strong>Build for extensibility</strong> - Architecture designed for current needs plus future requirements prevents duplicate work later</p>
+<p>✅ <strong>Standardization unlocks analytics</strong> - Consistent data format enables trend analysis, pricing insights, and demand forecasting that were previously impossible</p>
+<hr />
+<h2 id="whatsnext">What's Next 🚀</h2>
+<p>We're currently processing 6% of calls. The roadmap ahead:</p>
+<p><strong>Scale to 100%</strong>: Architecture optimizations are underway to handle all 32 lakh monthly calls without latency</p>
+<p><strong>Improve user data accuracy</strong>: Pushing name, location, and contact extraction from 80% to match the 94% accuracy of product and price data</p>
+<p><strong>Add more fields</strong>: As teams identify new use cases, we'll extend the schema without requiring separate infrastructure</p>
+<p><strong>Deeper analytics</strong>: With comprehensive data coverage, we can build predictive models for pricing, inventory, and demand forecasting</p>
+<p>The foundation is built. Now we scale.</p>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>When multiple teams need similar data from the same source, the instinct is often to let each team build their own solution. It feels faster. It avoids coordination overhead. But at scale, this creates massive inefficiency.</p>
+<p>By centralizing PNS data extraction, we didn't just cut costs. We created a foundation for better decision-making across IndiaMART. Product teams, analytics teams, and sales teams now work from the same data. Consistency improves. Trust increases. And when someone needs new insights, we don't need to build a new pipeline - we extend what exists.</p>
+<p>The next time 32 lakh B2B conversations happen on our platform, we'll be ready to extract every insight, once, accurately, and make it available to everyone who needs it.</p>
+<hr />
+</body>
+</html>

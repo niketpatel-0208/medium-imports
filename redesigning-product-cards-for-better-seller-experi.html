@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redesigning Product Cards for Better Seller Experience</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 { font-size: 2.2em; margin-bottom: 0.5em; }
+        h2 { font-size: 1.6em; margin-top: 1.5em; }
+        h3 { font-size: 1.3em; }
+        img { max-width: 100%; height: auto; margin: 1em 0; }
+        pre { background: #f4f4f4; padding: 1em; overflow-x: auto; }
+        code { background: #f4f4f4; padding: 0.2em 0.4em; }
+        blockquote { border-left: 4px solid #ddd; margin-left: 0; padding-left: 1em; color: #666; }
+        table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f4f4f4; }
+        hr { border: none; border-top: 1px solid #ddd; margin: 2em 0; }
+    </style>
+</head>
+<body>
+<h1 id="redesigningproductcardsforbettersellerexperience">Redesigning Product Cards for Better Seller Experience</h1>
+<p><em>How a UI refresh helped sellers see more product details without clutter, and why small design changes matter at scale.</em></p>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>Imagine managing hundreds of products on a marketplace platform. You log in to check your inventory, and each product card shows just five key details - some truncated, some color-coded in ways you've gotten used to over the years, but not quite intuitive. You want to quickly spot what's missing, what needs updating, and where to focus your attention. But the interface feels dated, and finding that information takes more effort than it should.</p>
+<p>This was the reality for thousands of sellers on IndiaMART. The product card design on the Manage Product section had served its purpose well, but after years of incremental updates, it had become a patchwork of features. Colors meant different things on seller versus admin views. Important details were getting cut off. The layout didn't follow modern design principles.</p>
+<p><strong>The challenge wasn't that the old design was broken - it was that it could be so much better.</strong> So we decided to rebuild it from scratch, focusing on space optimization, visual clarity, and helping sellers take the right actions faster. Here's how we approached the redesign and what we learned from testing it with real users.</p>
+<hr />
+<h2 id="theproblemwiththeolddesign">The Problem with the Old Design 🎨</h2>
+<p>The existing product card had evolved organically over several years. Each new feature or requirement was added on top of the previous structure, creating a design that worked but wasn't optimal.</p>
+<p><strong>Here's what sellers and our production team were dealing with:</strong></p>
+<ul>
+<li><strong>Limited visibility:</strong> Only 5 product specifications (ISQs) were shown at once, with unfilled config items and other filled attributes competing for space</li>
+<li><strong>Inconsistent color coding:</strong> Green for config items, grey for others on seller view; but on admin view, different colors (green, brown, black, grey) represented different attribute types - confusing and hard to remember</li>
+<li><strong>No clear indication of mandatory fields:</strong> Sellers couldn't immediately tell which specifications they <em>had</em> to fill versus nice-to-have details</li>
+<li><strong>Cluttered layout:</strong> Share buttons, audit icons, and product scores were scattered across the card without a clear visual hierarchy</li>
+<li><strong>Price display issues:</strong> Prices appeared without proper formatting (no comma separators), making large numbers hard to read at a glance</li>
+<li><strong>Space inefficiency:</strong> The linear product score scale and scattered UI elements consumed valuable screen real estate</li>
+</ul>
+<p>Perhaps most importantly, <strong>there was no visual distinction for mandatory specifications</strong> - a compliance issue that put both sellers and the platform at risk.</p>
+<p><img src="https://lh3.googleusercontent.com/d/1iWP8YMC14lGRqdeUvqcNDpQnUSpQrLAr" alt="Old product card design showing limited specifications and scattered UI elements" />
+<em>The old product card UI - functional but showing signs of accumulated design debt</em></p>
+<hr />
+<h2 id="thesolutionmoderndesignmeetssellerneeds">The Solution: Modern Design Meets Seller Needs 💡</h2>
+<p>Rather than another incremental update, we decided on a comprehensive UI/UX refresh. But we didn't want to reinvent the wheel - the information hierarchy and media placement were working well. Instead, we focused on <strong>typography, iconography, color usage, and space optimization</strong>.</p>
+<h3 id="designprincipleswefollowed">Design Principles We Followed</h3>
+<p>We built the new design around <strong>IndiaMART's Style Guide v1.0</strong>, ensuring consistency across the platform. Every color choice, font size, and spacing decision now followed documented standards rather than ad-hoc decisions.</p>
+<h3 id="keychangesimplemented">Key Changes Implemented</h3>
+<p><strong>More information, better organized:</strong></p>
+<ul>
+<li>Increased ISQ display from 5 to <strong>6 specifications</strong> (filled + unfilled)</li>
+<li>Unfilled mandatory, config, and key specifications now appear in <strong>amber-colored capsules</strong> - impossible to miss</li>
+<li>Regular unfilled specs show in subtle grey capsules</li>
+<li><strong>Asterisk (*) indicator</strong> next to mandatory fields with a tooltip - solving the compliance requirement</li>
+</ul>
+<p><strong>Smarter use of space:</strong></p>
+<ul>
+<li>Replaced the linear product score scale with a <strong>circular scale</strong> - same information, less space</li>
+<li>Grouped share icons together with Preview and QC buttons in the <strong>top-right corner</strong> (ordered by actual usage data: Copy, WhatsApp, Facebook, LinkedIn, Twitter)</li>
+<li>Replaced "Use AI to Audit" with a simpler <strong>"QC" button</strong> for quality control</li>
+</ul>
+<p><strong>Better readability:</strong></p>
+<ul>
+<li><strong>Increased font size</strong> for key product details that sellers need to scan quickly</li>
+<li><strong>Reduced heading sizes</strong> to create better visual balance</li>
+<li>Added <strong>digit grouping with commas</strong> for prices (e.g., 1,50,000 instead of 150000)</li>
+<li>Removed price capsule background when price is available - cleaner look</li>
+</ul>
+<p><strong>Consistency improvements:</strong></p>
+<ul>
+<li>Removed color coding from ISQs on admin view (kept helpful tooltips for production team)</li>
+<li>Standardized ISQ display order across both seller and admin views: Mandatory Unfilled → Config Unfilled → Key Unfilled → All Filled → Regular Unfilled</li>
+<li>Deprecated the "half-card" UI that appeared for certain product categories - <strong>all products now use the full card layout</strong></li>
+</ul>
+<p><img src="https://lh3.googleusercontent.com/d/11DSoDMQkwGQKg7uASvz7r1fbFzJVMvQY" alt="New product card design with improved spacing and clear mandatory field indicators" />
+<em>The redesigned product card - more information, clearer hierarchy, modern aesthetics</em></p>
+<hr />
+<h2 id="testingthedesignwithrealsellers">Testing the Design with Real Sellers 🧪</h2>
+<p>We didn't roll this out to everyone immediately. Instead, we ran an <strong>A/B test</strong> to measure the real impact.</p>
+<h3 id="thetestsetup">The Test Setup</h3>
+<ul>
+<li><strong>Test group (Even GLIDs):</strong> Saw the new UI</li>
+<li><strong>Control group (Odd GLIDs):</strong> Continued with the old UI</li>
+<li><strong>Who was affected:</strong> Both sellers and admin/employee logins</li>
+<li><strong>What we monitored:</strong> Key KPIs including fill rates for price and specifications, user engagement, and any negative signals</li>
+</ul>
+<p>This approach let us validate our design assumptions with real usage data before committing to a full rollout.</p>
+<h3 id="whatweexpected">What We Expected</h3>
+<p>The hypothesis was straightforward: <strong>better visual design and clearer information hierarchy should help sellers take action more easily.</strong> Specifically:</p>
+<ul>
+<li>Higher fill rates for mandatory specifications (now clearly marked with asterisk)</li>
+<li>Improved fill rates for price (better formatted and more visible)</li>
+<li>Better engagement with specifications (showing 6 instead of 5, with unfilled items in capsules)</li>
+<li>No negative impact on existing workflows</li>
+</ul>
+<p><img src="https://lh3.googleusercontent.com/d/1s1Emhu-lSpuvEiw9G4MJH39EV0peyRC7" alt="Technical sequence diagram showing ISQ display logic" />
+<em>The logic behind ISQ prioritization and display sequence</em></p>
+<hr />
+<h2 id="whythismattersbeyondaesthetics">Why This Matters Beyond Aesthetics 🎯</h2>
+<p>Design refreshes can feel superficial, but this one tackled real business needs:</p>
+<p><strong>For sellers:</strong></p>
+<ul>
+<li>Faster identification of incomplete product information</li>
+<li>Clear understanding of what's mandatory versus optional</li>
+<li>Less cognitive load when managing dozens or hundreds of products</li>
+<li>Professional, modern interface that reflects well on the platform</li>
+</ul>
+<p><strong>For the platform:</strong></p>
+<ul>
+<li><strong>Legal compliance</strong> through clear mandatory field indicators</li>
+<li>Better data quality as sellers fill more specifications</li>
+<li>Reduced support queries about what needs to be filled</li>
+<li>Consistent design language across the seller experience</li>
+</ul>
+<p><strong>For the production team:</strong></p>
+<ul>
+<li>Retained helpful tooltips while removing visual clutter</li>
+<li>Streamlined QC process with the new "QC" button</li>
+<li>Consistent view across admin and seller interfaces</li>
+</ul>
+<hr />
+<h2 id="keytakeaways">Key Takeaways 📝</h2>
+<p>🎨 <strong>Design debt is real</strong> - Years of incremental changes had created inconsistency. Sometimes a full refresh is better than another patch.</p>
+<p>📊 <strong>Test before you commit</strong> - A/B testing lets you validate design decisions with real user behavior, not just opinions.</p>
+<p>⚠️ <strong>Small indicators matter</strong> - Adding an asterisk and tooltip for mandatory fields solved a compliance issue and improved seller clarity.</p>
+<p>📐 <strong>Space optimization compounds</strong> - Circular vs. linear scales, grouped buttons, smarter font sizing - each small change added up to room for an extra specification.</p>
+<p>🎯 <strong>Follow your own standards</strong> - Using the Style Guide v1.0 ensured consistency and made design decisions faster and more defensible.</p>
+<p>🔄 <strong>Consistency beats familiarity</strong> - Removing the half-card exception and standardizing ISQ display order created a more predictable experience, even if some users were used to the old way.</p>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>The product card redesign shows how thoughtful UI/UX work can solve multiple problems at once. What started as "let's modernize the design" became an opportunity to improve information density, solve compliance requirements, and create a more consistent seller experience.</p>
+<p>The A/B testing approach gave us confidence that we weren't just making things <em>look</em> better - we were making them <em>work</em> better. By monitoring key metrics closely, we could validate that the new design helped sellers complete their profiles more effectively.</p>
+<p><strong>Design isn't just about aesthetics; it's about reducing friction.</strong> Every truncated label, every unclear status indicator, every misaligned button is a small moment of confusion that adds up across thousands of sellers and millions of sessions. This redesign removed many of those small frictions.</p>
+<p>As we continue monitoring the test results and prepare for a potential full rollout, the bigger lesson is clear: legacy interfaces need periodic refreshes, not just to keep up with design trends, but to serve users better as their needs evolve and platforms mature.</p>
+</body>
+</html>
